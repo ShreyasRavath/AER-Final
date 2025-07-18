@@ -1,18 +1,19 @@
 
 module "primary_vpc" {
-  source        = "./modules/vpc"
-  name          = "primary"
-  vpc_cidr      = "10.0.0.0/16"
-  subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
-  azs           = ["us-east-1a", "us-east-1b"]
+  source       = "./modules/vpc"
+  name         = "primary"
+  vpc_cidr     = "10.0.0.0/16"
+  subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24"]
+  azs          = ["us-east-1a", "us-east-1b"]
 }
 
 module "standby_vpc" {
-  source        = "./modules/vpc"
-  name          = "standby"
-  vpc_cidr      = "10.1.0.0/16"
-  subnet_cidrs  = ["10.1.1.0/24", "10.1.2.0/24"]
-  azs           = ["us-west-2a", "us-west-2b"]
+  providers    = { aws = aws.standby }
+  source       = "./modules/vpc"
+  name         = "standby"
+  vpc_cidr     = "10.1.0.0/16"
+  subnet_cidrs = ["10.1.1.0/24", "10.1.2.0/24"]
+  azs          = ["us-east-2a", "us-east-2b"]
 }
 
 module "primary_eks" {
