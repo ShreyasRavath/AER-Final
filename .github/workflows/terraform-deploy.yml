@@ -40,6 +40,7 @@ jobs:
     
     - name: Extract ECR repo URI from Terraform
       working-directory: terraform
+      env:
+        TF_CLI_ARGS: "-no-color"
       run: |
         echo $(terraform output -raw ecr_repo_url | tr -d '\n')
-
