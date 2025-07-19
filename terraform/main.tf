@@ -59,6 +59,6 @@ module "standby_efs" {
 }
 
 module "ecr" {
-  source = "./ecr"
+  source = "./modules/ecr"
   account_id = var.account_id
 }
