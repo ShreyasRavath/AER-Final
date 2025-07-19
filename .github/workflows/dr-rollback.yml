@@ -1,0 +1,11 @@
+name: Rollback Standby Region
+on: [workflow_dispatch]
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Scale Down Standby
+      run: |
+        aws eks update-kubeconfig --region us-east-2 --name standby-eks
+        kubectl scale deployment frontend --replicas=0 -n sock-shop
+        kubectl scale deployment backend --replicas=0 -n sock-shop

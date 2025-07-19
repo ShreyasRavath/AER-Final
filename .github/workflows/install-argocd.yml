@@ -1,0 +1,19 @@
+name: Install ArgoCD with Ingress
+on:
+  workflow_dispatch:
+jobs:
+  install-argocd:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Configure AWS and kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name primary-eks
+    - name: Install ArgoCD
+      run: |
+        kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    - name: Deploy Ingress for ArgoCD UI
+      run: |
+        kubectl apply -f automation/argocd-apps/argocd-ingress.yaml --context=primary-eks

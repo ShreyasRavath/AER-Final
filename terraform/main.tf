@@ -57,3 +57,8 @@ module "standby_efs" {
     module.standby_vpc
   ]
 }
+
+module "ecr" {
+  source = "./ecr"
+  account_id = var.account_id
+}

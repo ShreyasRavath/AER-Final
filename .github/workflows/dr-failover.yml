@@ -1,0 +1,11 @@
+name: Trigger DR Failover
+on: [workflow_dispatch]
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Scale Up Standby
+      run: |
+        aws eks update-kubeconfig --region us-east-2 --name standby-eks
+        kubectl scale deployment frontend --replicas=2 -n sock-shop
+        kubectl scale deployment backend --replicas=2 -n sock-shop
