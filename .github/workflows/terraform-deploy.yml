@@ -41,5 +41,5 @@ jobs:
     - name: Extract ECR repo URI from Terraform
       working-directory: terraform
       run: |
-        echo $(terraform output ecr_repo_url)
+        echo $(terraform output -raw ecr_repo_url | tr -d '\n')
 
