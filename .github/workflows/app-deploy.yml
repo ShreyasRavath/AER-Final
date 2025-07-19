@@ -38,6 +38,8 @@ jobs:
       run: |
         aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
 
-    - name: Deploy to EKS
+    - name: Patch image if deployment exists
       run: |
-        kubectl set image deployment/frontend-deployment frontend=$ECR_REPO:$GITHUB_SHA -n sock-shop
+        kubectl get deployment frontend-deployment -n sock-shop && \
+        kubectl set image deployment/frontend-deployment frontend=$ECR_REPO:$GITHUB_SHA -n sock-shop || \
+        echo "Deployment not found, skipping image update"
