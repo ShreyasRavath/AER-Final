@@ -36,7 +36,6 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.primary.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.primary.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.primary.token
-  load_config_file       = false
 }
 
 # Kubernetes provider for standby region
@@ -45,5 +44,4 @@ provider "kubernetes" {
   host                   = data.aws_eks_cluster.standby.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.standby.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.standby.token
-  load_config_file       = false
 }
