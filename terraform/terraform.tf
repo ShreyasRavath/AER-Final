@@ -1,4 +1,11 @@
 terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "latest"
+    }
+  }
+
   backend "s3" {
     bucket       = "aer-finalproject"
     key          = "aer-finalproject.tfstate"
