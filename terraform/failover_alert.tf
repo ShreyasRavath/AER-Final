@@ -1,5 +1,5 @@
 resource "aws_route53_health_check" "primary" {
-  fqdn              = var.primary_lb_dns
+  fqdn              = module.alb.alb_dns_name
   port              = 80
   type              = "HTTP"
   resource_path     = "/health"

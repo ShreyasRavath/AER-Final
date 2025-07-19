@@ -62,3 +62,9 @@ module "ecr" {
   source = "./modules/ecr"
   account_id = var.account_id
 }
+
+module "alb" {
+  source     = "./modules/alb-terraform"
+  vpc_id     = module.primary_vpc.vpc_id
+  subnet_ids = module.primary_vpc.public_subnet_ids
+}
