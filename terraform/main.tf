@@ -31,9 +31,9 @@ module "standby_eks" {
   subnet_ids   = module.standby_vpc.subnet_ids
   vpc_id       = module.standby_vpc.vpc_id
 
-  depends_on = {
+  depends_on = [
     module.standby_vpc
-  }
+  ]
 }
 
 module "primary_efs" {
@@ -51,7 +51,7 @@ module "standby_efs" {
   subnet_ids        = module.standby_vpc.subnet_ids
   security_group_id = module.standby_vpc.security_group_id
 
-  depends_on = {
+  depends_on = [
     module.standby_vpc
-  }
+  ]
 }
