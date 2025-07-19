@@ -7,7 +7,7 @@ resource "aws_ecr_repository" "aer_app" {
 resource "aws_ecr_replication_configuration" "replication" {
   replication_configuration {
     rule {
-      destinations {
+      destination {
         region       = "us-east-2"
         registry_id  = var.account_id
       }
@@ -17,5 +17,5 @@ resource "aws_ecr_replication_configuration" "replication" {
 
 
 output "ecr_repo_url" {
-  value = aws_ecr_repository.aer_app.ecr_repo_url
+  value = aws_ecr_repository.aer_app.repository_url
 }
