@@ -26,6 +26,7 @@ module "primary_eks" {
 
 module "standby_eks" {
   source       = "./modules/eks_cluster"
+  providers = { aws = aws.standby}
   cluster_name = "standby-eks"
   region       = var.standby_region
   subnet_ids   = module.standby_vpc.subnet_ids
@@ -46,6 +47,7 @@ module "primary_efs" {
 
 module "standby_efs" {
   source            = "./modules/efs_storage"
+  providers = { aws = aws.standby}
   region            = var.standby_region
   file_system_name  = "standby-efs"
   subnet_ids        = module.standby_vpc.subnet_ids

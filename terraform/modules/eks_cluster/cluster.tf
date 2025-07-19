@@ -9,6 +9,7 @@ terraform {
 }
 
 resource "aws_eks_cluster" "eks" {
+  provider = aws
   name     = var.cluster_name
   role_arn = aws_iam_role.eks.arn
 
@@ -19,7 +20,6 @@ resource "aws_eks_cluster" "eks" {
 
 resource "aws_iam_role" "eks" {
   name = "eks-cluster-role-${var.cluster_name}"
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
