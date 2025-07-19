@@ -37,3 +37,8 @@ jobs:
     - name: Terraform Apply
       working-directory: ${{ env.TF_DIR }}
       run: terraform apply -auto-approve
+    
+    - name: Extract ECR repo URI from Terraform
+      id: ecr
+      run: |
+        echo "ECR_REPO=$(terraform output -raw ecr_repo_url)" >> $GITHUB_ENV
