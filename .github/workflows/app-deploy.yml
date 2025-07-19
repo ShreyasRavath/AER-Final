@@ -1,3 +1,4 @@
+
 name: Application CI/CD
 
 on:
@@ -8,8 +9,10 @@ on:
 env:
   AWS_REGION: us-east-1
   CLUSTER_NAME: primary-eks
-  IMAGE_NAME: aer-devops
-  ECR_REPO: ${{ secrets.ECR_REPO }}
+  BACKEND_IMAGE_NAME: aer-backend
+  FRONTEND_IMAGE_NAME: aer-frontend
+  BACKEND_ECR_REPO: ${{ secrets.BACKEND_ECR_REPO }}
+  FRONTEND_ECR_REPO: ${{ secrets.FRONTEND_ECR_REPO }}
 
 jobs:
   build-deploy:
@@ -29,17 +32,32 @@ jobs:
     - name: Login to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build and Push Docker Image
+    - name: Build & Push Backend Image
       run: |
-        docker build -t $ECR_REPO:$GITHUB_SHA ./app-code/backend
-        docker push $ECR_REPO:$GITHUB_SHA
+        docker build -t $BACKEND_ECR_REPO:$GITHUB_SHA ./app-code/backend
+        docker push $BACKEND_ECR_REPO:$GITHUB_SHA
+
+    - name: Build & Push Frontend Image
+      run: |
+        docker build -t $FRONTEND_ECR_REPO:$GITHUB_SHA ./app-code/frontend/notes-frontend
+        docker push $FRONTEND_ECR_REPO:$GITHUB_SHA
 
     - name: Update Kubeconfig
       run: |
-        aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+        aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME --alias $CLUSTER_NAME
 
-    - name: Patch image if deployment exists
+    - name: Create Namespace if Missing
       run: |
-        kubectl get deployment frontend-deployment -n sock-shop && \
-        kubectl set image deployment/frontend-deployment frontend=$ECR_REPO:$GITHUB_SHA -n sock-shop || \
-        echo "Deployment not found, skipping image update"
+        kubectl get namespace sock-shop || kubectl create namespace sock-shop
+
+    - name: Apply K8s Manifests
+      run: |
+        kubectl apply -f k8s_files/ -n sock-shop
+
+    - name: Patch Backend Image
+      run: |
+        kubectl set image deployment/backend backend=$BACKEND_ECR_REPO:$GITHUB_SHA -n sock-shop
+
+    - name: Patch Frontend Image
+      run: |
+        kubectl set image deployment/frontend frontend=$FRONTEND_ECR_REPO:$GITHUB_SHA -n sock-shop
