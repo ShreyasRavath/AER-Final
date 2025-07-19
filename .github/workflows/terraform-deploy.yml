@@ -38,6 +38,13 @@ jobs:
       working-directory: ${{ env.TF_DIR }}
       run: terraform apply -auto-approve
     
-    - name: Export ECR repo URI to GitHub ENV
-      run: echo "ECR_REPO=$(terraform output -raw ecr_repo_url)" >> $GITHUB_ENV
+    - name: Extract ECR repo URI from Terraform
+      working-directory: terraform
+      run: |
+        ECR_REPO=$(terraform output -raw ecr_repo_url 2>/dev/null || echo "")
+        if [[ -z "$ECR_REPO" ]]; then
+        echo "❌ Failed to get ecr_repo_url. Skipping export."
+        exit 1
+        fi
+        echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
 
