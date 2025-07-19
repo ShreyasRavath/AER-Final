@@ -37,16 +37,4 @@ jobs:
     - name: Terraform Apply
       working-directory: ${{ env.TF_DIR }}
       run: terraform apply -auto-approve
-    
-    - name: Extract ECR repo URI from Terraform
-      working-directory: terraform
-      env:
-        TF_CLI_ARGS: "-no-color"
-      run: |
-        terraform output -raw ecr_repo_url | tr -d '\n' > ../ecr_repo.env
-
-    - name: Load ECR URI from file
-      run: |
-        source ../ecr_repo.env
-        echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
 
