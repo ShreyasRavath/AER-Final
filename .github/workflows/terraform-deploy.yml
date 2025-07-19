@@ -43,4 +43,4 @@ jobs:
       env:
         TF_CLI_ARGS: "-no-color"
       run: |
-        echo $(terraform output -raw ecr_repo_url | tr -d '\n')
+        terraform output -raw ecr_repo_url | tr -d '\n' > ../ecr_repo.env
