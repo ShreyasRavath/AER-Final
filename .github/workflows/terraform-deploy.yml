@@ -41,10 +41,5 @@ jobs:
     - name: Extract ECR repo URI from Terraform
       working-directory: terraform
       run: |
-        ECR_REPO=$(terraform output -raw ecr_repo_url)
-        if [[ -z "$ECR_REPO" ]]; then
-        echo "❌ Failed to get ecr_repo_url. Skipping export."
-        exit 1
-        fi
-        echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
+        echo $(terraform output -raw ecr_repo_url)
 
